@@ -1,9 +1,8 @@
+// routes/imageRoutes.js
 const express = require('express');
+const { uploadImage } = require('../controllers/imageController');
 const router = express.Router();
-const upload = require('../utils/multerConfig');
-const { processImage } = require('../controllers/imageController');
 
-// POST /api/images/upload - Upload and process an image
-router.post('/upload', upload.single('image'), processImage);
+router.post('/upload', uploadImage);
 
 module.exports = router;

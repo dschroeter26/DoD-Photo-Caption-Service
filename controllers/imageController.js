@@ -1,31 +1,35 @@
-const axios = require('axios');
-const fs = require('fs');
-const path = require('path');
+// controllers/imageController.js
+const multer = require('multer');
+const sharp = require('sharp');
 
-// Process the uploaded image
-const processImage = async (req, res) => {
-  try {
-    const imagePath = req.file.path;
-    // TODO: Perform face detection and recognition
+// Configure multer for file upload handling
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage }).single('image');
 
-    // TODO: Fetch person details from database
+// Image upload and processing controller
+exports.uploadImage = (req, res) => {
+  upload(req, res, async (err) => {
+    if (err) {
+      return res.status(500).json({ message: 'Error uploading image', error: err });
+    }
 
-    // Call AP-Style-Caption-Generator
-    const response = await axios.post(process.env.CAPTION_API_URL, {
-      people: [], // Example payload
-      context: 'Event description', // Example context
-    });
+    if (!req.file) {
+      return res.status(400).json({ message: 'No image file provided' });
+    }
 
-    const caption = response.data.caption;
+    try {
+      // Image processing with Sharp
+      const processedImageBuffer = await sharp(req.file.buffer)
+        .resize(800, 800) // Resize image to 800x800 pixels
+        .jpeg({ quality: 80 }) // Convert to JPEG with quality of 80
+        .toBuffer();
 
-    // Clean up uploaded file
-    fs.unlinkSync(imagePath);
+      // You can save the processed image buffer to your database or file system
+      // For now, we will just send a response that the image was processed successfully
 
-    res.json({ caption });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error processing image' });
-  }
+      res.status(200).json({ message: 'Image uploaded and processed successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Error processing image', error });
+    }
+  });
 };
-
-module.exports = { processImage };
