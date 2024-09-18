@@ -7,7 +7,7 @@ const upload = multer({ storage: storage }).single("image");
 
 // Image upload and processing controller
 const uploadImage = (req, res) => {
-  console.log('Received request to upload image');
+  console.log('Received request to upload image', req);
 
   upload(req, res, async (err) => {
     if (err) {
