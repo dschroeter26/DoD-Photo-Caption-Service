@@ -1,4 +1,3 @@
-// controllers/imageController.js
 const multer = require("multer");
 const { recognizeFace } = require("./../utils/pythonClient");
 
@@ -7,7 +6,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage }).single("image");
 
 // Image upload and processing controller
-exports.uploadImage = (req, res) => {
+const uploadImage = (req, res) => {
   console.log('Received request to upload image');
 
   upload(req, res, async (err) => {
@@ -37,6 +36,4 @@ exports.uploadImage = (req, res) => {
   });
 };
 
-module.exports = {
-  uploadImage
-};
+module.exports = { uploadImage };

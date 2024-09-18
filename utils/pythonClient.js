@@ -1,31 +1,27 @@
-// utils/pythonClient.js
-const { spawn } = require("child_process");
+const axios = require('axios');
+const FormData = require('form-data');
 
-const recognizeFace = async (imageBuffer) => {
-  return new Promise((resolve, reject) => {
-    const pythonProcess = spawn("python3", ["facial_recognition_api.py"]);
-
-    pythonProcess.stdin.write(imageBuffer);
-    pythonProcess.stdin.end();
-
-    let data = "";
-
-    pythonProcess.stdout.on("data", (chunk) => {
-      data += chunk;
+async function recognizeFace(imageBuffer) {
+  try {
+    // Create a form and append the image
+    const form = new FormData();
+    form.append('image', imageBuffer, {
+      filename: 'upload.png', // or any appropriate name
+      contentType: 'image/png', // Change to your file's content type
     });
 
-    pythonProcess.stderr.on("data", (error) => {
-      console.error("Python error:", error.toString());
-      reject(error.toString());
+    // Send the form data to the Flask API
+    const response = await axios.post('http://localhost:5001/facial-recognition', form, {
+      headers: {
+        ...form.getHeaders(),
+      },
     });
 
-    pythonProcess.on("close", (code) => {
-      if (code !== 0) {
-        return reject(`Python process exited with code ${code}`);
-      }
-      resolve(JSON.parse(data));
-    });
-  });
-};
+    return response.data;
+  } catch (error) {
+    console.error('Error calling Flask API:', error.message);
+    throw error;
+  }
+}
 
 module.exports = { recognizeFace };
