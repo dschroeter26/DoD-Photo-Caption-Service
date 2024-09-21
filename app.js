@@ -5,7 +5,7 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db"); // Import your database connection
 const imageRoutes = require("./routes/imageRoutes"); // Image upload routes
 const multer = require("multer");
-const { recognizeFace } = require("./utils/pythonClient");
+const { recognizeFace } = require("./utils/FacialRecognitionApiClient");
 
 dotenv.config(); // Load environment variables
 
