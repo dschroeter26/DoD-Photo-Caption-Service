@@ -24,4 +24,4 @@ async function recognizeFace(imageBuffer) {
   }
 }
 
-module.exports = { recognizeFace, captionPhoto };
+module.exports = { recognizeFace };
