@@ -40,44 +40,44 @@ const uploadImage = (req, res) => {
 };
 
 // generateCaption controller
-const generateCaption = async (req, res) => {
-  try {
-    const {
-      fileName,
-      contentType,
-      faces,
-      city,
-      state,
-      action,
-      context,
-      photographer,
-    } = req.body;
-    const image = req.file; // Get uploaded image
+// const generateCaption = async (req, res) => {
+//   try {
+//     const {
+//       fileName,
+//       contentType,
+//       faces,
+//       city,
+//       state,
+//       action,
+//       context,
+//       photographer,
+//     } = req.body;
+//     const image = req.file; // Get uploaded image
 
-    // Prepare form data to send to ap-caption-generator service
-    const formData = new FormData();
-    formData.append("image", fs.createReadStream(image.path));
-    formData.append("fileName", fileName);
-    formData.append("contentType", contentType);
-    formData.append("faces", faces);
-    formData.append("city", city);
-    formData.append("state", state);
-    formData.append("action", action);
-    formData.append("context", context);
-    formData.append("photographer", photographer);
+//     // Prepare form data to send to ap-caption-generator service
+//     const formData = new FormData();
+//     formData.append("image", fs.createReadStream(image.path));
+//     formData.append("fileName", fileName);
+//     formData.append("contentType", contentType);
+//     formData.append("faces", faces);
+//     formData.append("city", city);
+//     formData.append("state", state);
+//     formData.append("action", action);
+//     formData.append("context", context);
+//     formData.append("photographer", photographer);
 
-    // Send the data to the caption generation service
-    const response = await captionPhoto(formData);
+//     // Send the data to the caption generation service
+//     const response = await captionPhoto(formData);
 
-    // Forward the generated caption back to the frontend
-    res.json({ caption: response.data.caption });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error generating caption" });
-  } finally {
-    // Clean up the uploaded image file after processing
-    fs.unlinkSync(image.path);
-  }
-};
+//     // Forward the generated caption back to the frontend
+//     res.json({ caption: response.data.caption });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Error generating caption" });
+//   } finally {
+//     // Clean up the uploaded image file after processing
+//     fs.unlinkSync(image.path);
+//   }
+// };
 
-module.exports = { uploadImage, generateCaption };
+module.exports = { uploadImage };
